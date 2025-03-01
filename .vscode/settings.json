@@ -51,5 +51,6 @@
         "streambuf": "cpp",
         "typeinfo": "cpp",
         "variant": "cpp"
-    }
+    },
+    "python.analysis.autoImportCompletions": true
 }
