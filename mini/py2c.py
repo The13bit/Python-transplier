@@ -11,4 +11,6 @@ tree=cst.parse_module(file)
 parser=CParser(tree)
 
 
-print(parser.generate())
+out=parser.generate()
+with open(str(base)+"/out.c", "w") as f:
+    f.write(out)

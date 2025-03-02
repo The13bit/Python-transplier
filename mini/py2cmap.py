@@ -18,4 +18,4 @@ type_to_printf={
     
 }
 
-help_dec=["#define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))\n"]
+help_dec=["#include <stdio.h>\n","#include <stdlib.h>\n","#define ARRAYSIZE(arr) sizeof(arr) / sizeof(arr[0])\n"]

@@ -273,6 +273,7 @@ int main(int argc, char **argv)
 	SageBuilder::buildCpreprocessorDefineDeclaration(top_scope, "#define CUDA_BLOCK_X 128");
 	SageBuilder::buildCpreprocessorDefineDeclaration(top_scope, "#define CUDA_BLOCK_Y 1");
 	SageBuilder::buildCpreprocessorDefineDeclaration(top_scope, "#define CUDA_BLOCK_Z 1");
+	//SageBuilder::buildCpreprocessorDefineDeclaration(top_scope, "#define ARRAY_SIZE(arr) (sizeof(arr) / sizeof(arr[0]))");
 
 	/* Obtain translation */
 	project->unparse();
