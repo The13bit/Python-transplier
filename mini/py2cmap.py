@@ -17,3 +17,5 @@ type_to_printf={
     "void":"%s",
     
 }
+
+help_dec=["#define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))\n"]

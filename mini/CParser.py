@@ -1,10 +1,13 @@
 import libcst as cst
-from py2cmap import py_2_c_map,type_to_printf
+from py2cmap import py_2_c_map,type_to_printf,help_dec
 from utils import basic_op,complex_op,assignments,get_name_or_vals
+from collections import defaultdict
 class CParser(cst.CSTVisitor):
     def __init__(self,node):
         super().__init__()
         self.output=[]
+        self.fun=[]
+        self.declared_fn=defaultdict(set)
         self.seen=set()
         self.type_map=[{}]
         self.indent=0
@@ -15,7 +18,7 @@ class CParser(cst.CSTVisitor):
         return " "*self.indent*4
     
     def generate(self):
-        return "".join(self.output)    
+        return "".join(help_dec)+"".join(self.fun)+"".join(self.output)    
     
     def get_basic_names(self,node):
         for i in [basic_op,assignments,get_name_or_vals,complex_op]:
@@ -86,6 +89,43 @@ class CParser(cst.CSTVisitor):
         value=self.get_basic_names(node.value)
         op=self.get_basic_names(node.operator)
         self.output.append(self.get_indent()+f"{target} {op} {value};\n")
+    
+    def visit_If(self, node):
+        if node in self.seen:
+            return
+        self.seen.add(node)
+        self.get_basic_names(node)
+    
+    def visit_Else(self, node):
+        if node in self.seen:
+            return
+        self.seen.add(node)
+        self.get_basic_names(node)
+    
+    def visit_FunctionDef(self, node):
+        name=self.get_basic_names(node.name)
+        params=self.get_basic_names(node.params)
+        returns=self.get_basic_names(node.returns)
+        
+        if isinstance(returns,list):
+            self.type_map[-1][name]=py_2_c_map[returns[-1]]
+            returns=self.process_arr_ann(returns)
+        else:
+            returns=py_2_c_map[returns]
+        
+        
+        tp=[i.split()[0] for i in params]
+        self.declared_fn[name].add(tuple(tp))
+        
+        curr=len(self.output)
+        self.output.append(f"{returns} {name}(" + ", ".join(params)+")"+"{\n")
+        node.body.visit(self)
+        self.output.append("}\n")
+        self.fun.extend(self.output[curr:])
+        self.output=self.output[:curr]
+    def visit_SimpleStatementLine(self, node):
+
+        self.get_basic_names(node)
 
     
     
