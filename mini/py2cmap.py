@@ -6,6 +6,7 @@ py_2_c_map={
     "None":"void",
     "True":"true",
     "False":"false",
+    "void":"void"
     
 }
 
@@ -18,4 +19,4 @@ type_to_printf={
     
 }
 
-help_dec=["#include <stdio.h>\n","#include <stdlib.h>\n","#define ARRAYSIZE(arr) sizeof(arr) / sizeof(arr[0])\n"]
+help_dec=["#include <stdio.h>\n","#include <stdlib.h>\n","#include<stdbool.h>\n","#define ARRAYSIZE(arr) sizeof(arr) / sizeof(arr[0])\n"]

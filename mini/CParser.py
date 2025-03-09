@@ -1,6 +1,6 @@
 import libcst as cst
-from py2cmap import py_2_c_map, type_to_printf, help_dec
-from utils import basic_op, complex_op, assignments, get_name_or_vals
+from .py2cmap import py_2_c_map, type_to_printf, help_dec
+from .utils import basic_op, complex_op, assignments, get_name_or_vals
 from collections import defaultdict
 
 
@@ -9,7 +9,7 @@ class CParser(cst.CSTVisitor):
         super().__init__()
         self.output = []
         self.fun = []
-        self.declared_fn = defaultdict(set)
+        self.declared_fn = defaultdict()
         self.seen = set()
         self.type_map = [{}]
         self.indent = 0
@@ -20,7 +20,7 @@ class CParser(cst.CSTVisitor):
         return " " * self.indent * 4
 
     def generate(self):
-        return "".join(help_dec) + "".join(self.fun) + "".join(self.output)
+        return "".join(help_dec) + "".join(self.fun) + "".join(self.output),self.declared_fn
 
     def get_basic_names(self, node):
         for i in [basic_op, assignments, get_name_or_vals, complex_op]:
@@ -62,11 +62,11 @@ class CParser(cst.CSTVisitor):
                     # Generate C array declaration and initialization loop
                     self.output.append(
                         self.get_indent()
-                        + f"{annotation[-1]} {target}[ARRAYSIZE(&{array_name})];\n"
+                        + f"{annotation[-1]} {target}[ARRAYSIZE({array_name})];\n"
                     )
                     self.output.append(
                         self.get_indent()
-                        + f"for(int i = 0; i < ARRAYSIZE(&{array_name}); i++) {{\n"
+                        + f"for(int i = 0; i < ARRAYSIZE({array_name}); i++) {{\n"
                     )
                     self.output.append(
                         self.get_indent() + f"    {target}[i] = {init_value};\n"
@@ -75,9 +75,21 @@ class CParser(cst.CSTVisitor):
                     return
                 elif isinstance(node.value.right, cst.Integer):
                     val=self.get_basic_names(node.value.right)
+                    left=self.get_basic_names(node.value.left)
+                    left=list(eval(left))[0]
                     #annotation=self.process_arr_ann(annotation)
-                    self.output.append(self.get_indent() + f"{annotation[-1]} {target}[{val}];\n")
-                    self.output.append(self.get_indent() + f"memset({target}, 0, {val} * sizeof({annotation[-1]}));\n")
+                    self.output.append(
+                        self.get_indent()
+                        + f"{annotation[-1]} {target}[{val}];\n"
+                    )
+                    self.output.append(
+                        self.get_indent()
+                        + f"for(int i = 0; i < {val}; i++) {{\n"
+                    )
+                    self.output.append(
+                        self.get_indent() + f"    {target}[i] = {left};\n"
+                    )
+                    self.output.append(self.get_indent() + "}\n")
                     return
                     
                         
@@ -131,6 +143,9 @@ class CParser(cst.CSTVisitor):
         self.seen.add(node)
         target = self.get_basic_names(node.target)
         iter = self.get_basic_names(node.iter)
+        if "ARRAYSIZE" in iter:
+            iter = iter[10:-2]
+            
         cond = "<" if int(iter[2]) > 0 else ">"
         self.output.append(
             self.get_indent()
@@ -153,7 +168,6 @@ class CParser(cst.CSTVisitor):
     def visit_If(self, node):
         if node in self.seen:
             return
-        self.seen.add(node)
         self.get_basic_names(node)
 
     def visit_Else(self, node):
@@ -174,7 +188,7 @@ class CParser(cst.CSTVisitor):
             returns = py_2_c_map[returns]
 
         tp = [i.split()[0] for i in params] if params else []
-        self.declared_fn[name].add(tuple(tp))
+        self.declared_fn[(name,returns)]=tuple(tp)
 
         curr = len(self.output)
         if params:

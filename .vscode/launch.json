@@ -5,6 +5,7 @@
     "version": "0.2.0",
     "configurations": [
 
+
         {
             "name": "Python Debugger: Transcompiler",
             "type": "debugpy",
@@ -14,6 +15,15 @@
                 "Python Transcompiler/Test_code.py",
                 "Python Transcompiler/out.cpp"
             ]
-        }
+        },
+       
+              {
+                "name": "Python C++ Debug",
+                "type": "pythoncpp",
+                "request": "launch",
+                "pythonConfig": "default",
+                "cppConfig": "default (gdb) Attach",
+              }
+         
     ]
 }

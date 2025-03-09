@@ -1,7 +1,8 @@
 from math import e
 import libcst as cst
 
-from py2cmap import py_2_c_map, type_to_printf
+
+from .py2cmap import py_2_c_map, type_to_printf
 
 # Function to translate Python operators to their C equivalents
 def basic_op(self, node):
@@ -70,6 +71,8 @@ def assignments(self, node):
 # Function to extract names or values from different types of nodes
 def get_name_or_vals(self, node):
     if isinstance(node, cst.Name):
+        if node.value in py_2_c_map:
+            return py_2_c_map[node.value]
         return node.value
     elif isinstance(node, cst.Attribute):
         return self.get_basic_names(node.value) + "." + node.attr.value
@@ -149,8 +152,10 @@ def complex_op(self, node):
                         # Raw string handling
                         pvars.append(x[1])
                     else:
+                        import re
                         # Array handling
-                        pvars.append(type_to_printf[self.type_map[-1][x[0]]])
+                        ann_tmp=[x for x in re.split("(\*)", self.type_map[-1][x[0]]) if x][:-(len(x)-1)]
+                        pvars.append(type_to_printf[''.join(ann_tmp)])
                         x = x[0] + ''.join([f"[{i}]" for i in x[1:]])
                         args.append(x)
                 else:
@@ -175,7 +180,7 @@ def complex_op(self, node):
             return f"{func}({','.join(args)})"
         elif func == "len":
             # Convert Python len function to C macro
-            return f"ARRAYSIZE(&{self.get_basic_names(node.args[0])})"
+            return f"ARRAYSIZE({self.get_basic_names(node.args[0])})"
          
     # Handle expressions and statements
     elif isinstance(node, cst.Expr):
@@ -201,6 +206,9 @@ def complex_op(self, node):
         op = self.get_basic_names(node.operator)
         return f"{left} {op} {right}"
     elif isinstance(node, cst.If):
+        if node in self.seen:
+            return
+        self.seen.add(node)
         # Convert Python if statement to C
         test = self.get_basic_names(node.test)
         
@@ -248,6 +256,7 @@ def complex_op(self, node):
         ann = self.get_basic_names(node.annotation)
         if isinstance(ann, list):
             ann = self.process_arr_ann(ann)
+        self.type_map[-1][name] = ann
         
         return f"{ann} {name}"
     elif isinstance(node, cst.Parameters):
