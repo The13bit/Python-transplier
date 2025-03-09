@@ -143,12 +143,14 @@ def _get_dimensions(arr):
 
 def _pointer_to_list(ptr, dims, depth=0):
     """Convert a C pointer back to a Python list based on original dimensions"""
+    if len(dims) == 1:
+        return [ptr[i] for i in range(dims[0])]
     if depth == len(dims)-1:
         return [ptr[0][i] for i in range(dims[depth])]
     
     result = []
     for i in range(dims[depth]):
         result.append(_pointer_to_list(ptr[i], dims, depth + 1))
-    return result[0]
+    return result
     
     

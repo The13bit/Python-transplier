@@ -4,21 +4,21 @@ from typing import List
 from mini.PUDA import to_c 
 import ctypes
 import random
-@to_c
-def add(a:List[List[int]],b:List[List[int]],c:List[List[int]],rows:int,cols:int)->None:
-    for i in range(rows):
-        for j in range(cols):
-            c[i][j]=a[i][j]+b[i][j]
-            print(c[i][j])
+# @to_c
+# def add(a:List[List[int]],b:List[List[int]],c:List[List[int]],rows:int,cols:int)->None:
+#     for i in range(rows):
+#         for j in range(cols):
+#             c[i][j]=a[i][j]+b[i][j]
+#             print(c[i][j])
 
 
 
-a=[[1 for _ in range(5)] for i in range(5)]
-b=[[2 for _ in range(5)] for i in range(5)]
-c=[[0 for i in range(5)]for i in range(5)]
-n=len(a)
-x,y=add(a,b,c,5,5)
-print(y[-1])
+# a=[[1 for _ in range(5)] for i in range(5)]
+# b=[[2 for _ in range(5)] for i in range(5)]
+# c=[[0 for i in range(5)]for i in range(5)]
+# n=len(a)
+# x,y=add(a,b,c,5,5)
+# print(y[-1])
 
 @to_c
 def add_1d(a:List[int],b:List[int],c:List[int],n:int)->None:
@@ -26,7 +26,7 @@ def add_1d(a:List[int],b:List[int],c:List[int],n:int)->None:
         c[i]=a[i]+b[i]
 
 a=[1 for _ in range(5)]
-b=[2 for _ in range(5)]
+b=[8 for _ in range(5)]
 c=[0 for i in range(5)]
 n=len(a)
 x,y=add_1d(a,b,c,5)
