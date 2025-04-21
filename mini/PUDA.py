@@ -1,6 +1,7 @@
 from sqlite3 import paramstyle
 import time
 import libcst as cst
+import numba
 from zipp import Path
 from mini.CParser import CParser
 import inspect
@@ -46,7 +47,14 @@ def array_converter(arr,depth,c_type):
         
     r_arr=(r_type*rows)(*tmp)
     return r_arr,r_type
-            
+def met():
+    time.sleep(0.001)
+def to_sc(fn):
+    #use numba jit
+    def wrap(*args):
+        return jit(fn)(*args)
+        
+    return wrap          
 
     
 #decorator that  wrpas a fun and converts it to C

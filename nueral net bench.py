@@ -5,11 +5,12 @@ from typing import List
 import time
 import numpy as np
 import mini
-from mini.PUDA import to_c
+from mini.PUDA import met, to_c
 import mini.PUDA
-
-DEBUG=False
+from numba import jit
+DEBUG=True
 @to_c(dbg=DEBUG)
+
 def matrix_multiply(
     A: List[List[float]],
     B: List[List[float]],
@@ -92,6 +93,8 @@ class NeuralNetwork:
         # Backpropagate error through layers
         for layer_idx in reversed(range(self.num_layers - 1)):
             # Get current layer parameters
+            if not DEBUG: 
+                met()
             weights = self.weights[layer_idx]
             prev_activation = self.activations[layer_idx]
             
@@ -119,7 +122,7 @@ class NeuralNetwork:
                 loss = self.calculate_loss(output, y)
                 
                 print(f"Epoch {epoch}, Loss: {loss:.6f}")
-                if DEBUG:
+                if DEBUG==True:
                     print("Overhead:",mini.PUDA.overhead[0]-prev)
                     prev=mini.PUDA.overhead[0]
 
@@ -198,7 +201,7 @@ if __name__ == "__main__":
     y = [[0], [1], [1], [0]]
 
     # Create network with layer sizes [input, hidden1, hidden2, output]
-    nn = NeuralNetwork([2, 128,128, 1])
+    nn = NeuralNetwork([2, 32,64, 1])
     start=time.time()
     # Train network
     nn.train(X, y, epochs=2000, learning_rate=0.1)

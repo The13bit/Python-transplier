@@ -168,7 +168,7 @@ def complex_op(self, node):
                         pvars.append(type_to_printf[self.type_map[-1][x]])
                     args.append(x)
             
-            return "printf(\"" + ' '.join([f"{i} " for i in pvars]) + "\\n\"," + ','.join(args) + ");"
+            return "printf(\"" + ' '.join([f"{i} " for i in pvars]) + "\\n\"" + ','.join(args) + ");"
         elif func in self.declared_fn:
             # Handle user-defined function calls
             args = []
