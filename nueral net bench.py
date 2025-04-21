@@ -8,7 +8,7 @@ import mini
 from mini.PUDA import met, to_c
 import mini.PUDA
 from numba import jit
-DEBUG=True
+DEBUG=False
 @to_c(dbg=DEBUG)
 
 def matrix_multiply(
@@ -93,8 +93,8 @@ class NeuralNetwork:
         # Backpropagate error through layers
         for layer_idx in reversed(range(self.num_layers - 1)):
             # Get current layer parameters
-            if not DEBUG: 
-                met()
+            
+            met()
             weights = self.weights[layer_idx]
             prev_activation = self.activations[layer_idx]
             
@@ -204,7 +204,7 @@ if __name__ == "__main__":
     nn = NeuralNetwork([2, 32,64, 1])
     start=time.time()
     # Train network
-    nn.train(X, y, epochs=2000, learning_rate=0.1)
+    nn.train(X, y, epochs=5000, learning_rate=0.1)
     print("Time Taken:",time.time()-start)
     # Test predictions
     print("\nPredictions:")

@@ -8,7 +8,7 @@ import time
 
 import mini.PUDA
 
-#@to_c(dbg=True)
+@to_c(dbg=True)
 def matrix_multiply(
     A: List[List[float]],
     B: List[List[float]],
@@ -22,14 +22,14 @@ def matrix_multiply(
     for i in range(rows_A):
         for j in range(cols_B):
       
-                res[i][j] += A[i][j] * B[i][j]
+                res[i][j] += (A[i][j] * B[i][j])/3394
            # print(res[i][j])
     return res
 
 random.seed(0)
 
-A = [[random.uniform(-1, 1) for _ in range(512)] for _ in range(512)]
-B = [[random.uniform(-1, 1) for _ in range(512)] for _ in range(512)]
+A = [[random.uniform(-1, 1) for _ in range(800)] for _ in range(800)]
+B = [[random.uniform(-1, 1) for _ in range(800)] for _ in range(800)]
 rows_A = len(A)
 cols_A = len(A[0])
 cols_B = len(B[0])

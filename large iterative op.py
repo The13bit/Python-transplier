@@ -16,7 +16,7 @@ def csum(arr:List[int],size:int)->int:
 la=[i for i in range(1000000)] 
 s=time.time()
 print(csum(la,len(la)))
-print(f"Time taken: {time.time()-s}")
+print(f"Time taken PUDA: {time.time()-s}")
 
 s=time.time()
 def csum(arr:List[int],size:int)->int:
@@ -26,4 +26,4 @@ def csum(arr:List[int],size:int)->int:
         res=res+arr[i%size]
     return res
 csum(la,len(la))
-print(f"Time taken: {time.time()-s}")
+print(f"Time taken Python: {time.time()-s}")

@@ -164,6 +164,8 @@ class CParser(cst.CSTVisitor):
         if isinstance(target, list):
             target = target[0] + ''.join([f"[{i}]" for i in target[1:]])
         value = self.get_basic_names(node.value)
+        if isinstance(value, list):
+            value = value[0] + ''.join([f"[{i}]" for i in value[1:]])
         op = self.get_basic_names(node.operator)
         self.output.append(self.get_indent() + f"{target} {op} {value};\n")
 
