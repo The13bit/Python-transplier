@@ -259,6 +259,7 @@ def complex_op(self, node):
         self.type_map[-1][name] = ann
         
         return f"{ann} {name}"
+ 
     elif isinstance(node, cst.Parameters):
         # Process all parameters of a function
         tmp = []
@@ -274,6 +275,7 @@ def complex_op(self, node):
     
     elif isinstance(node, cst.FormattedString):
         # Handle f-strings
+
         var = []
         for i in node.parts:
             x = self.get_basic_names(i)

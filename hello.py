@@ -8,7 +8,7 @@ import time
 
 import mini.PUDA
 
-@to_c(dbg=True)
+#@to_c(dbg=True)
 def matrix_multiply(
     A: List[List[float]],
     B: List[List[float]],
@@ -28,8 +28,8 @@ def matrix_multiply(
 
 random.seed(0)
 
-A = [[random.uniform(-1, 1) for _ in range(800)] for _ in range(800)]
-B = [[random.uniform(-1, 1) for _ in range(800)] for _ in range(800)]
+A = [[random.uniform(-1, 1) for _ in range(2000)] for _ in range(2000)]
+B = [[random.uniform(-1, 1) for _ in range(2000)] for _ in range(2000)]
 rows_A = len(A)
 cols_A = len(A[0])
 cols_B = len(B[0])
@@ -38,6 +38,6 @@ start=time.time()
 
 result = matrix_multiply(A, B,result, rows_A, cols_A, cols_B)
 print(f"time Taken PUDA:{time.time()-start}",result[0][0])
-print(mini.PUDA.overhead)
+#print(mini.PUDA.overhead)
 
 

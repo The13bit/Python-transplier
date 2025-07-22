@@ -1,1 +1,6 @@
 mini.build/
+*.c
+*.so
+*.ipynb
+
+minii/__pycache__/

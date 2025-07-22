@@ -3,7 +3,7 @@ import time
 import libcst as cst
 import numba
 from zipp import Path
-from mini.CParser import CParser
+from minii.CParser import CParser
 import inspect
 import hashlib
 import ctypes
@@ -34,7 +34,6 @@ type_to_ctype = {
     "str": ctypes.c_char_p,
 }
 
-
 def array_converter(arr, depth, c_type):
     if depth == 1:
         # Handle 1D array
@@ -64,12 +63,7 @@ def met():
 
 
 
-def to_sc(fn):
-    # use numba jit
-    def wrap(*args):
-        return jit(fn)(*args)
 
-    return wrap
 
 
 # decorator that  wrpas a fun and converts it to C

@@ -9,7 +9,7 @@ from mini.PUDA import met, to_c
 import mini.PUDA
 from numba import jit
 DEBUG=False
-@to_c(dbg=DEBUG)
+#@to_c(dbg=DEBUG)
 
 def matrix_multiply(
     A: List[List[float]],

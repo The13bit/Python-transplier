@@ -121,13 +121,14 @@ class CParser(cst.CSTVisitor):
     def visit_Assign(self, node: cst.Assign):
         if node in self.seen:
             return
+        
         self.seen.add(node)
         target = self.get_basic_names(node.targets[0])
         if isinstance(target, list):
             target = target[0] + "".join([f"[{i}]" for i in target[1:]])
         value = self.get_basic_names(node.value)
         self.output.append(self.get_indent() + f"{target} = {value};\n")
-
+        
     def visit_IndentedBlock(self, node):
         if node in self.seen:
             return
