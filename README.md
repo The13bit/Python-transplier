@@ -45,7 +45,7 @@ print(f"time Taken PUDA:{time.time()-start}",result[0][0])
 ```
 Comparison of running the above code with and without PUDA:
 
-|Without PUDA|With PUDA|
+|With PUDA|Without PUDA|
 |:---:|:---:|
 |1.7489 sec|26.9894 sec|
 
